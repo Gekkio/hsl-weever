@@ -1,0 +1,12 @@
+[package]
+name = "hsl-weever"
+version = "0.1.0"
+authors = ["Joonas Javanainen <joonas.javanainen@gmail.com>"]
+
+[dependencies]
+chrono = "0.2"
+clap = "2.2"
+hyper = "0.8"
+regex = "0.1"
+rustc-serialize = "0.3"
+url = "0.5"
