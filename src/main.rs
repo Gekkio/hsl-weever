@@ -90,11 +90,13 @@ fn run_main() -> Result<(), BusError> {
     };
 
     let departures = try!(fetch_departures(request_config, stops));
+    let mut stdout = std::io::stdout();
     for d in departures {
-        println!("{:02}:{:02}\t{}",
-                 d.timestamp.hour(),
-                 d.timestamp.minute(),
-                 d.bus);
+        let _ = writeln!(&mut stdout,
+                         "{:02}:{:02}\t{}",
+                         d.timestamp.hour(),
+                         d.timestamp.minute(),
+                         d.bus);
     }
     Ok(())
 }
