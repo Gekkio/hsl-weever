@@ -31,11 +31,11 @@ fn build_url(config: &RequestConfig, code: &str) -> Result<Url, BusError> {
     let url_str = format!("http://matka.hsl.fi/otp/routers/hsl/index/stops/HSL:{}/stoptimes",
                           code);
     let mut url = try!(Url::parse(&url_str));
-    let mut query_params = vec![];
+
     if let Some(value) = config.departures_per_pattern {
-        query_params.push(("numberOfDepartures", format!("{}", value)));
+        let mut query_params = url.query_pairs_mut();
+        query_params.append_pair("numberOfDepartures", &format!("{}", value));
     }
-    url.set_query_from_pairs(&query_params);
 
     Ok(url)
 }
