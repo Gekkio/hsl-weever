@@ -25,7 +25,7 @@ fn fetch_departures(config: RequestConfig, stops: Vec<&str>) -> Result<Vec<Depar
     let mut seen_buses = HashSet::new();
     let mut departures = vec![];
     for stop in stops {
-        let stop_departures = try!(http::fetch_stop_departures(&client, &config, &stop));
+        let stop_departures = http::fetch_stop_departures(&client, &config, &stop)?;
         let mut stop_buses = HashSet::new();
         for departure in stop_departures {
             if seen_buses.contains(&departure.bus) {
@@ -56,7 +56,7 @@ pub struct Departure {
 const VERSION: &'static str = env!("CARGO_PKG_VERSION");
 
 fn run_main() -> Result<(), BusError> {
-    let stop_id_re = try!(Regex::new(r"^[0-9]+$"));
+    let stop_id_re = Regex::new(r"^[0-9]+$")?;
     let matches = App::new("hsl-weever")
         .version(VERSION)
         .author("Joonas Javanainen <joonas.javanainen@gmail.com>")
@@ -89,7 +89,7 @@ fn run_main() -> Result<(), BusError> {
         },
     };
 
-    let departures = try!(fetch_departures(request_config, stops));
+    let departures = fetch_departures(request_config, stops)?;
     let mut stdout = std::io::stdout();
     for d in departures {
         let _ = writeln!(&mut stdout,
