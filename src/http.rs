@@ -4,6 +4,7 @@ use hyper::{Client, Url};
 use regex::Regex;
 use rustc_serialize::json;
 use std::io::Read;
+use url::percent_encoding::{DEFAULT_ENCODE_SET, utf8_percent_encode};
 
 use error::BusError;
 use super::{Departure, RequestConfig};
@@ -27,10 +28,12 @@ struct JsonStopTime {
     tripId: String,
 }
 
+fn encode(input: &str) -> String { utf8_percent_encode(input, DEFAULT_ENCODE_SET).collect() }
+
 fn build_url(config: &RequestConfig, code: &str) -> Result<Url, BusError> {
     let url_str = format!(
         "http://api.digitransit.fi/routing/v1/routers/hsl/index/stops/HSL:{}/stoptimes",
-        code);
+        encode(code));
     let mut url = try!(Url::parse(&url_str));
 
     if let Some(value) = config.departures_per_pattern {
