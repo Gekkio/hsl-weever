@@ -64,12 +64,12 @@ pub fn fetch_stop_departures(client: &Client,
     let mut departures = vec![];
 
     for stop_pattern in responses {
+        println!("{}", stop_pattern.pattern.id);
         let pattern_match = try!(pattern_id_re.captures(&stop_pattern.pattern.id)
                                               .ok_or(BusError("Pattern ID did not match".into())));
-        let raw_bus_code = try!(pattern_match.at(1)
+        let raw_bus_code = try!(pattern_match.get(1)
                                              .ok_or(BusError("Pattern did not contain captured \
-                                                              value"
-                                                                 .into())));
+                                                              value".into()))).as_str();
         let bus_code = raw_bus_code[1..].trim().trim_left_matches('0').to_owned();
 
         for time in stop_pattern.times {
