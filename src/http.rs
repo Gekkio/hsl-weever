@@ -28,8 +28,9 @@ struct JsonStopTime {
 }
 
 fn build_url(config: &RequestConfig, code: &str) -> Result<Url, BusError> {
-    let url_str = format!("http://matka.hsl.fi/otp/routers/hsl/index/stops/HSL:{}/stoptimes",
-                          code);
+    let url_str = format!(
+        "http://api.digitransit.fi/routing/v1/routers/hsl/index/stops/HSL:{}/stoptimes",
+        code);
     let mut url = try!(Url::parse(&url_str));
 
     if let Some(value) = config.departures_per_pattern {
