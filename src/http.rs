@@ -6,8 +6,8 @@ use rustc_serialize::json;
 use std::io::Read;
 use url::percent_encoding::{DEFAULT_ENCODE_SET, utf8_percent_encode};
 
-use error::BusError;
-use super::{Departure, RequestConfig};
+use ::{Departure, RequestConfig};
+use ::error::BusError;
 
 #[derive(Debug, RustcDecodable)]
 struct JsonStopPattern {
@@ -65,7 +65,7 @@ pub fn fetch_stop_departures(client: &Client,
 
     for stop_pattern in responses {
         let pattern_match = try!(pattern_id_re.captures(&stop_pattern.pattern.id)
-                                              .ok_or(BusError("Pattern ID did not match".into())));
+            .ok_or(BusError("Pattern ID did not match".into())));
         let bus_code = pattern_match[1].to_owned();
 
         for time in stop_pattern.times {

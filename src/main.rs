@@ -58,27 +58,27 @@ const VERSION: &'static str = env!("CARGO_PKG_VERSION");
 fn run_main() -> Result<(), BusError> {
     let stop_id_re = try!(Regex::new(r"^[0-9]+$"));
     let matches = App::new("hsl-weever")
-                      .version(VERSION)
-                      .author("Joonas Javanainen <joonas.javanainen@gmail.com>")
-                      .about("A utility for fetching HSL bus departure data for stops")
-                      .arg(Arg::with_name("DEPARTURES_PER_PATTERN")
-                               .help("Departures to fetch per trip pattern")
-                               .takes_value(true)
-                               .short("d")
-                               .long("departures-per-pattern"))
-                      .arg(Arg::with_name("STOP_ID")
-                               .help("HSL stop IDs (descending priority)")
-                               .multiple(true)
-                               .required(true)
-                               .validator(move |v| {
-                                   if stop_id_re.is_match(&v) {
-                                       Ok(())
-                                   } else {
-                                       Err("Invalid stop ID".to_owned())
-                                   }
-                               })
-                               .index(1))
-                      .get_matches();
+        .version(VERSION)
+        .author("Joonas Javanainen <joonas.javanainen@gmail.com>")
+        .about("A utility for fetching HSL bus departure data for stops")
+        .arg(Arg::with_name("DEPARTURES_PER_PATTERN")
+            .help("Departures to fetch per trip pattern")
+            .takes_value(true)
+            .short("d")
+            .long("departures-per-pattern"))
+        .arg(Arg::with_name("STOP_ID")
+            .help("HSL stop IDs (descending priority)")
+            .multiple(true)
+            .required(true)
+            .validator(move |v| {
+                if stop_id_re.is_match(&v) {
+                    Ok(())
+                } else {
+                    Err("Invalid stop ID".to_owned())
+                }
+            })
+            .index(1))
+        .get_matches();
 
     let stops = matches.values_of("STOP_ID").unwrap().collect();
     let request_config = RequestConfig {

@@ -1,9 +1,9 @@
 use chrono;
 use hyper;
-use std::io;
 use regex;
 use rustc_serialize;
 use std::borrow::Cow;
+use std::io;
 use url;
 
 #[derive(Debug)]
@@ -16,21 +16,15 @@ impl From<chrono::format::ParseError> for BusError {
 }
 
 impl From<hyper::error::Error> for BusError {
-    fn from(error: hyper::error::Error) -> BusError {
-        BusError(format!("Hyper: {}", error).into())
-    }
+    fn from(error: hyper::error::Error) -> BusError { BusError(format!("Hyper: {}", error).into()) }
 }
 
 impl From<io::Error> for BusError {
-    fn from(error: io::Error) -> BusError {
-        BusError(format!("IO: {}", error).into())
-    }
+    fn from(error: io::Error) -> BusError { BusError(format!("IO: {}", error).into()) }
 }
 
 impl From<regex::Error> for BusError {
-    fn from(error: regex::Error) -> BusError {
-        BusError(format!("Regex: {}", error).into())
-    }
+    fn from(error: regex::Error) -> BusError { BusError(format!("Regex: {}", error).into()) }
 }
 
 impl From<rustc_serialize::json::DecoderError> for BusError {
@@ -40,7 +34,5 @@ impl From<rustc_serialize::json::DecoderError> for BusError {
 }
 
 impl From<url::ParseError> for BusError {
-    fn from(error: url::ParseError) -> BusError {
-        BusError(format!("URL: {}", error).into())
-    }
+    fn from(error: url::ParseError) -> BusError { BusError(format!("URL: {}", error).into()) }
 }
