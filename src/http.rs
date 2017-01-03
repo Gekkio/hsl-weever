@@ -28,12 +28,12 @@ struct JsonStopTime {
     tripId: String,
 }
 
+static API_V1: &'static str = "http://api.digitransit.fi/routing/v1";
+
 fn encode(input: &str) -> String { utf8_percent_encode(input, DEFAULT_ENCODE_SET).collect() }
 
 fn build_url(config: &RequestConfig, code: &str) -> Result<Url, BusError> {
-    let url_str = format!(
-        "http://api.digitransit.fi/routing/v1/routers/hsl/index/stops/HSL:{}/stoptimes",
-        encode(code));
+    let url_str = format!("{}/routers/hsl/index/stops/HSL:{}/stoptimes", API_V1, encode(code));
     let mut url = try!(Url::parse(&url_str));
 
     if let Some(value) = config.departures_per_pattern {
