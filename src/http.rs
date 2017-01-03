@@ -59,18 +59,14 @@ pub fn fetch_stop_departures(client: &Client,
     try!(res.read_to_string(&mut s));
     let responses: Vec<JsonStopPattern> = try!(json::decode(&s));
 
-    let pattern_id_re = try!(Regex::new(r"^HSL:([0-9A-Z]+):[0-9]+:[0-9]+$"));
+    let pattern_id_re = try!(Regex::new(r"^HSL:[0-9]0*([0-9A-Z]+):[0-9]+:[0-9]+$"));
 
     let mut departures = vec![];
 
     for stop_pattern in responses {
-        println!("{}", stop_pattern.pattern.id);
         let pattern_match = try!(pattern_id_re.captures(&stop_pattern.pattern.id)
                                               .ok_or(BusError("Pattern ID did not match".into())));
-        let raw_bus_code = try!(pattern_match.get(1)
-                                             .ok_or(BusError("Pattern did not contain captured \
-                                                              value".into()))).as_str();
-        let bus_code = raw_bus_code[1..].trim().trim_left_matches('0').to_owned();
+        let bus_code = pattern_match[1].to_owned();
 
         for time in stop_pattern.times {
             let secs = time.serviceDay + time.scheduledArrival;
