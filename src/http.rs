@@ -1,10 +1,10 @@
 use chrono::{Local, TimeZone};
 use hyper;
 use hyper::{Client, Url};
+use percent_encoding::{utf8_percent_encode, AsciiSet};
 use regex::Regex;
 use rustc_serialize::json;
 use std::io::Read;
-use url::percent_encoding::{utf8_percent_encode, DEFAULT_ENCODE_SET};
 
 use crate::error::BusError;
 use crate::{Departure, RequestConfig};
@@ -30,8 +30,14 @@ struct JsonStopTime {
 
 static API_V1: &'static str = "http://api.digitransit.fi/routing/v1";
 
+const PATH_ENCODE_SET: &AsciiSet = &percent_encoding::CONTROLS
+    .add(b'?')
+    .add(b'`')
+    .add(b'{')
+    .add(b'}');
+
 fn encode(input: &str) -> String {
-    utf8_percent_encode(input, DEFAULT_ENCODE_SET).collect()
+    utf8_percent_encode(input, PATH_ENCODE_SET).collect()
 }
 
 fn build_url(config: &RequestConfig, code: &str) -> Result<Url, BusError> {

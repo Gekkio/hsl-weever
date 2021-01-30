@@ -4,7 +4,6 @@ use regex;
 use rustc_serialize;
 use std::borrow::Cow;
 use std::io;
-use url;
 
 #[derive(Debug)]
 pub struct BusError(pub Cow<'static, str>);
@@ -39,8 +38,8 @@ impl From<rustc_serialize::json::DecoderError> for BusError {
     }
 }
 
-impl From<url::ParseError> for BusError {
-    fn from(error: url::ParseError) -> BusError {
-        BusError(format!("URL: {}", error).into())
+impl From<hyper::error::ParseError> for BusError {
+    fn from(error: hyper::error::ParseError) -> BusError {
+        BusError(format!("Parse: {}", error).into())
     }
 }
