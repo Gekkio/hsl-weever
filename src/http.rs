@@ -4,10 +4,10 @@ use hyper::{Client, Url};
 use regex::Regex;
 use rustc_serialize::json;
 use std::io::Read;
-use url::percent_encoding::{DEFAULT_ENCODE_SET, utf8_percent_encode};
+use url::percent_encoding::{utf8_percent_encode, DEFAULT_ENCODE_SET};
 
-use crate::{Departure, RequestConfig};
 use crate::error::BusError;
+use crate::{Departure, RequestConfig};
 
 #[derive(Debug, RustcDecodable)]
 struct JsonStopPattern {
@@ -30,10 +30,16 @@ struct JsonStopTime {
 
 static API_V1: &'static str = "http://api.digitransit.fi/routing/v1";
 
-fn encode(input: &str) -> String { utf8_percent_encode(input, DEFAULT_ENCODE_SET).collect() }
+fn encode(input: &str) -> String {
+    utf8_percent_encode(input, DEFAULT_ENCODE_SET).collect()
+}
 
 fn build_url(config: &RequestConfig, code: &str) -> Result<Url, BusError> {
-    let url_str = format!("{}/routers/hsl/index/stops/HSL:{}/stoptimes", API_V1, encode(code));
+    let url_str = format!(
+        "{}/routers/hsl/index/stops/HSL:{}/stoptimes",
+        API_V1,
+        encode(code)
+    );
     let mut url = Url::parse(&url_str)?;
 
     if let Some(value) = config.departures_per_pattern {
@@ -44,15 +50,18 @@ fn build_url(config: &RequestConfig, code: &str) -> Result<Url, BusError> {
     Ok(url)
 }
 
-pub fn fetch_stop_departures(client: &Client,
-                             config: &RequestConfig,
-                             code: &str)
-                             -> Result<Vec<Departure>, BusError> {
+pub fn fetch_stop_departures(
+    client: &Client,
+    config: &RequestConfig,
+    code: &str,
+) -> Result<Vec<Departure>, BusError> {
     let url = build_url(config, code)?;
 
     let mut res = client.get(url).send()?;
     if res.status != hyper::Ok {
-        return Err(BusError(format!("HTTP error for stop {}: {}", code, res.status).into()));
+        return Err(BusError(
+            format!("HTTP error for stop {}: {}", code, res.status).into(),
+        ));
     }
 
     let mut s = String::new();
@@ -64,7 +73,8 @@ pub fn fetch_stop_departures(client: &Client,
     let mut departures = vec![];
 
     for stop_pattern in responses {
-        let pattern_match = pattern_id_re.captures(&stop_pattern.pattern.id)
+        let pattern_match = pattern_id_re
+            .captures(&stop_pattern.pattern.id)
             .ok_or(BusError("Pattern ID did not match".into()))?;
         let bus_code = pattern_match[1].to_owned();
 

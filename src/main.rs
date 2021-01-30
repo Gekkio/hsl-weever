@@ -61,23 +61,27 @@ fn run_main() -> Result<(), BusError> {
         .version(VERSION)
         .author("Joonas Javanainen <joonas.javanainen@gmail.com>")
         .about("A utility for fetching HSL bus departure data for stops")
-        .arg(Arg::with_name("DEPARTURES_PER_PATTERN")
-            .help("Departures to fetch per trip pattern")
-            .takes_value(true)
-            .short("d")
-            .long("departures-per-pattern"))
-        .arg(Arg::with_name("STOP_ID")
-            .help("HSL stop IDs (descending priority)")
-            .multiple(true)
-            .required(true)
-            .validator(move |v| {
-                if stop_id_re.is_match(&v) {
-                    Ok(())
-                } else {
-                    Err("Invalid stop ID".to_owned())
-                }
-            })
-            .index(1))
+        .arg(
+            Arg::with_name("DEPARTURES_PER_PATTERN")
+                .help("Departures to fetch per trip pattern")
+                .takes_value(true)
+                .short("d")
+                .long("departures-per-pattern"),
+        )
+        .arg(
+            Arg::with_name("STOP_ID")
+                .help("HSL stop IDs (descending priority)")
+                .multiple(true)
+                .required(true)
+                .validator(move |v| {
+                    if stop_id_re.is_match(&v) {
+                        Ok(())
+                    } else {
+                        Err("Invalid stop ID".to_owned())
+                    }
+                })
+                .index(1),
+        )
         .get_matches();
 
     let stops = matches.values_of("STOP_ID").unwrap().collect();
@@ -92,11 +96,13 @@ fn run_main() -> Result<(), BusError> {
     let departures = fetch_departures(request_config, stops)?;
     let mut stdout = std::io::stdout();
     for d in departures {
-        let _ = writeln!(&mut stdout,
-                         "{:02}:{:02}\t{}",
-                         d.timestamp.hour(),
-                         d.timestamp.minute(),
-                         d.bus);
+        let _ = writeln!(
+            &mut stdout,
+            "{:02}:{:02}\t{}",
+            d.timestamp.hour(),
+            d.timestamp.minute(),
+            d.bus
+        );
     }
     Ok(())
 }
