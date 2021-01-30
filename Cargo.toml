@@ -2,6 +2,7 @@
 authors = ["Joonas Javanainen <joonas.javanainen@gmail.com>"]
 name = "hsl-weever"
 version = "0.1.1-pre"
+edition = "2018"
 
 [dependencies]
 chrono = "0.2"
