@@ -6,8 +6,8 @@ use rustc_serialize::json;
 use std::io::Read;
 use url::percent_encoding::{DEFAULT_ENCODE_SET, utf8_percent_encode};
 
-use ::{Departure, RequestConfig};
-use ::error::BusError;
+use crate::{Departure, RequestConfig};
+use crate::error::BusError;
 
 #[derive(Debug, RustcDecodable)]
 struct JsonStopPattern {

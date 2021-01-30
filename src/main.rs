@@ -14,7 +14,7 @@ use std::collections::HashSet;
 use std::io::Write;
 use std::process;
 
-use error::BusError;
+use crate::error::BusError;
 
 mod error;
 mod http;
