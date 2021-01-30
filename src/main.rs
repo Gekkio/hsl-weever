@@ -1,13 +1,5 @@
-extern crate chrono;
-#[macro_use]
-extern crate clap;
-extern crate hyper;
-extern crate regex;
-extern crate rustc_serialize;
-extern crate url;
-
 use chrono::{DateTime, Local, Timelike};
-use clap::{App, Arg};
+use clap::{value_t, App, Arg};
 use hyper::Client;
 use regex::Regex;
 use std::collections::HashSet;
